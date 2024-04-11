@@ -123,5 +123,5 @@ lazy val docs =
 lazy val examples = crossProject(JSPlatform, JVMPlatform)
   .in(file("examples"))
   .settings(
-    commonSettings,
+    commonSettings
   )
