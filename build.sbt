@@ -65,7 +65,7 @@ val commonSettings = Seq(
   )
 )
 
-lazy val root = tlCrossRootProject.aggregate(code, docs)
+lazy val root = tlCrossRootProject.aggregate(code, docs, examples)
 
 lazy val code = project
   .in(file("code"))
@@ -110,7 +110,7 @@ lazy val docs =
       ),
       tlSite := Def
         .sequential(
-          // (examples.js / Compile / fastLinkJS),
+          (examples.js / Compile / fastLinkJS),
           // (Compile / run).toTask(""),
           mdoc.toTask(""),
           css,
