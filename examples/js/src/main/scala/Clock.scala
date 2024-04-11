@@ -19,6 +19,7 @@ package clock
 import cats.effect.IO
 import cats.effect.unsafe.implicits.global
 import doodle.core.*
+import doodle.core.font.Font
 import doodle.svg.*
 import doodle.syntax.all.*
 
@@ -85,14 +86,21 @@ object Clock {
     val percentage = current.toDouble / max.toDouble
     val color = palette((percentage * palette.size).floor.toInt)
     val spacer = Picture.square(230).noStroke.noFill
+    val text =
+      Picture
+        .text(current.toString)
+        .font(Font.defaultSansSerif.size(36))
+        .strokeColor(color)
+        .fillColor(color)
+    val bg = text.on(spacer)
 
-    if percentage == 0.0 then spacer
+    if percentage == 0.0 then bg
     else
       Picture
         .arc(200, Angle.turns(percentage))
         .strokeColor(color)
         .strokeWidth(13.0)
-        .on(spacer)
+        .on(bg)
   }
 
   @JSExport
