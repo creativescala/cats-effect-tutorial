@@ -51,35 +51,27 @@ object Clock {
       .drawWithCanvasToIO(canvas)
   }
 
-  /** Convert a hex string, such as "669933", to a Color */
-  def hex(string: String): Color =
-    Color.rgb(
-      Integer.parseInt(string.substring(0, 2), 16),
-      Integer.parseInt(string.substring(2, 4), 16),
-      Integer.parseInt(string.substring(4, 6), 16)
-    )
-
   // Palette from coolors.co
   val palette = Array(
-    hex("f72585"),
-    hex("b5179e"),
-    hex("7209b7"),
-    hex("560bad"),
-    hex("480ca8"),
-    hex("3a0ca3"),
-    hex("3f37c9"),
-    hex("4361ee"),
-    hex("4895ef"),
-    hex("4cc9f0"),
-    hex("4895ef"),
-    hex("4361ee"),
-    hex("3f37c9"),
-    hex("3a0ca3"),
-    hex("480ca8"),
-    hex("560bad"),
-    hex("7209b7"),
-    hex("b5179e"),
-    hex("f72585")
+    Color.fromHex("f72585"),
+    Color.fromHex("b5179e"),
+    Color.fromHex("7209b7"),
+    Color.fromHex("560bad"),
+    Color.fromHex("480ca8"),
+    Color.fromHex("3a0ca3"),
+    Color.fromHex("3f37c9"),
+    Color.fromHex("4361ee"),
+    Color.fromHex("4895ef"),
+    Color.fromHex("4cc9f0"),
+    Color.fromHex("4895ef"),
+    Color.fromHex("4361ee"),
+    Color.fromHex("3f37c9"),
+    Color.fromHex("3a0ca3"),
+    Color.fromHex("480ca8"),
+    Color.fromHex("560bad"),
+    Color.fromHex("7209b7"),
+    Color.fromHex("b5179e"),
+    Color.fromHex("f72585")
   )
 
   def drawTimeUnit(current: Int, max: Int): Picture[Unit] = {
