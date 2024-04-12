@@ -2665,7 +2665,7 @@ function $c_Lclock_Clock$() {
   var this$2 = $m_Lcats_effect_IO$();
   var thunk = new $c_sjsr_AnonFunction0((() => new Date()));
   this.Lclock_Clock$__f_now = this$2.delay__F0__Lcats_effect_IO(thunk);
-  this.Lclock_Clock$__f_palette = new ($d_Ldoodle_core_Color.getArrayOf().constr)([this.hex__T__Ldoodle_core_Color("f72585"), this.hex__T__Ldoodle_core_Color("b5179e"), this.hex__T__Ldoodle_core_Color("7209b7"), this.hex__T__Ldoodle_core_Color("560bad"), this.hex__T__Ldoodle_core_Color("480ca8"), this.hex__T__Ldoodle_core_Color("3a0ca3"), this.hex__T__Ldoodle_core_Color("3f37c9"), this.hex__T__Ldoodle_core_Color("4361ee"), this.hex__T__Ldoodle_core_Color("4895ef"), this.hex__T__Ldoodle_core_Color("4cc9f0"), this.hex__T__Ldoodle_core_Color("4895ef"), this.hex__T__Ldoodle_core_Color("4361ee"), this.hex__T__Ldoodle_core_Color("3f37c9"), this.hex__T__Ldoodle_core_Color("3a0ca3"), this.hex__T__Ldoodle_core_Color("480ca8"), this.hex__T__Ldoodle_core_Color("560bad"), this.hex__T__Ldoodle_core_Color("7209b7"), this.hex__T__Ldoodle_core_Color("b5179e"), this.hex__T__Ldoodle_core_Color("f72585")]);
+  this.Lclock_Clock$__f_palette = new ($d_Ldoodle_core_Color.getArrayOf().constr)([$m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("f72585"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("b5179e"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("7209b7"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("560bad"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("480ca8"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("3a0ca3"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("3f37c9"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("4361ee"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("4895ef"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("4cc9f0"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("4895ef"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("4361ee"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("3f37c9"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("3a0ca3"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("480ca8"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("560bad"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("7209b7"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("b5179e"), $m_Ldoodle_core_Color$().fromHex__T__Ldoodle_core_Color("f72585")]);
 }
 $c_Lclock_Clock$.prototype = new $h_O();
 $c_Lclock_Clock$.prototype.constructor = $c_Lclock_Clock$;
@@ -2705,28 +2705,6 @@ $c_Lclock_Clock$.prototype.draw__sjs_js_Date__Ldoodle_svg_effect_Canvas__Lcats_e
   var s$1 = $m_Lcats_kernel_instances_unit_package$().Lcats_kernel_instances_unit_package$__f_catsKernelStdAlgebraForUnit;
   var picture$2 = new $c_Ldoodle_syntax_LayoutSyntax$$anon$2(that$1, s$1, this$6);
   return new $c_Ldoodle_syntax_AbstractRendererSyntax$RendererPictureOps(this$7, picture$2).drawWithCanvasToIO__O__Ldoodle_effect_Renderer__Lcats_effect_IO(canvas, $m_Ldoodle_svg_package$().Ldoodle_svg_package$__f_svgRenderer);
-});
-$c_Lclock_Clock$.prototype.hex__T__Ldoodle_core_Color = (function(string) {
-  var this$4 = $m_Ldoodle_core_Color$();
-  var this$1 = $n(string);
-  if ((this$1.length < 2)) {
-    $charAt(this$1, 2);
-  }
-  var s = $as_T(this$1.substring(0, 2));
-  var r = $m_jl_Integer$().parseInt__T__I__I(s, 16);
-  var this$2 = $n(string);
-  if ((this$2.length < 4)) {
-    $charAt(this$2, 4);
-  }
-  var s$1 = $as_T(this$2.substring(2, 4));
-  var g = $m_jl_Integer$().parseInt__T__I__I(s$1, 16);
-  var this$3 = $n(string);
-  if ((this$3.length < 6)) {
-    $charAt(this$3, 6);
-  }
-  var s$2 = $as_T(this$3.substring(4, 6));
-  var b = $m_jl_Integer$().parseInt__T__I__I(s$2, 16);
-  return this$4.rgba__I__I__I__D__Ldoodle_core_Color(r, g, b, 1.0);
 });
 $c_Lclock_Clock$.prototype.drawTimeUnit__I__I__Ldoodle_algebra_Picture = (function(current, max) {
   var percentage = (current / max);
@@ -23660,6 +23638,119 @@ var $d_Ldoodle_core_Color = new $TypeData().initClass(0, "doodle.core.Color", ({
   s_Product: 1,
   Ljava_io_Serializable: 1
 }));
+function $p_Ldoodle_core_Color$__error$1__T__E($thiz, hex$1) {
+  throw $ct_jl_IllegalArgumentException__T__(new $c_jl_IllegalArgumentException(), (("The string " + hex$1) + " doesn't represent a CSS hex-color"));
+}
+function $p_Ldoodle_core_Color$__parseHex$1__T__I__I($thiz, hex$2, offset) {
+  var this$3 = $n(hex$2);
+  var x63 = $charAt(this$3, offset);
+  switch (x63) {
+    case 48: {
+      return 0;
+      break;
+    }
+    case 49: {
+      return 1;
+      break;
+    }
+    case 50: {
+      return 2;
+      break;
+    }
+    case 51: {
+      return 3;
+      break;
+    }
+    case 52: {
+      return 4;
+      break;
+    }
+    case 53: {
+      return 5;
+      break;
+    }
+    case 54: {
+      return 6;
+      break;
+    }
+    case 55: {
+      return 7;
+      break;
+    }
+    case 56: {
+      return 8;
+      break;
+    }
+    case 57: {
+      return 9;
+      break;
+    }
+    case 97: {
+      return 10;
+      break;
+    }
+    case 65: {
+      return 10;
+      break;
+    }
+    case 98: {
+      return 11;
+      break;
+    }
+    case 66: {
+      return 11;
+      break;
+    }
+    case 99: {
+      return 12;
+      break;
+    }
+    case 67: {
+      return 12;
+      break;
+    }
+    case 100: {
+      return 13;
+      break;
+    }
+    case 68: {
+      return 13;
+      break;
+    }
+    case 101: {
+      return 14;
+      break;
+    }
+    case 69: {
+      return 14;
+      break;
+    }
+    case 102: {
+      return 15;
+      break;
+    }
+    case 70: {
+      return 15;
+      break;
+    }
+    default: {
+      $p_Ldoodle_core_Color$__error$1__T__E($thiz, hex$2);
+    }
+  }
+}
+function $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I($thiz, hex$3, offset) {
+  var h = $p_Ldoodle_core_Color$__parseHex$1__T__I__I($thiz, hex$3, offset);
+  return (((h << 4) + h) | 0);
+}
+function $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I($thiz, hex$4, offset) {
+  return ((($p_Ldoodle_core_Color$__parseHex$1__T__I__I($thiz, hex$4, offset) << 4) + $p_Ldoodle_core_Color$__parseHex$1__T__I__I($thiz, hex$4, ((1 + offset) | 0))) | 0);
+}
+function $p_Ldoodle_core_Color$__parseSingleAlpha$1__T__I__D($thiz, hex$5, offset) {
+  return ($p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I($thiz, hex$5, offset) / 255.0);
+}
+function $p_Ldoodle_core_Color$__parseDoubleAlpha$1__T__I__D($thiz, hex$6, offset) {
+  return ($p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I($thiz, hex$6, offset) / 255.0);
+}
 /** @constructor */
 function $c_Ldoodle_core_Color$() {
   this.Ldoodle_core_Color$__f_black = null;
@@ -23686,6 +23777,45 @@ $c_Ldoodle_core_Color$.prototype.rgba__I__I__I__D__Ldoodle_core_Color = (functio
   var this$8 = new $c_Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps(this$7, a);
   var a$1 = $m_Ldoodle_core_Normalized$().clip__D__D(this$8.Ldoodle_syntax_NormalizedSyntax$ToNormalizedOps__f_value);
   return new $c_Ldoodle_core_Color$RGBA(r$1, g$1, b$1, a$1);
+});
+$c_Ldoodle_core_Color$.prototype.fromHex__T__Ldoodle_core_Color = (function(hex) {
+  var this$3 = $n(hex);
+  if (($charAt(this$3, 0) === 35)) {
+    var offset = 1;
+  } else {
+    var offset = 0;
+  }
+  var this$6 = $n(hex);
+  var x64 = ((this$6.length - offset) | 0);
+  switch (x64) {
+    case 3: {
+      var this$7 = $m_Ldoodle_core_Color$();
+      var r = $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, offset);
+      var g = $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, ((1 + offset) | 0));
+      var b = $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, ((2 + offset) | 0));
+      return this$7.rgba__I__I__I__D__Ldoodle_core_Color(r, g, b, 1.0);
+      break;
+    }
+    case 4: {
+      return $m_Ldoodle_core_Color$().rgba__I__I__I__D__Ldoodle_core_Color($p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, offset), $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, ((1 + offset) | 0)), $p_Ldoodle_core_Color$__parseSingleHex$1__T__I__I(this, hex, ((2 + offset) | 0)), $p_Ldoodle_core_Color$__parseSingleAlpha$1__T__I__D(this, hex, ((3 + offset) | 0)));
+      break;
+    }
+    case 6: {
+      var this$8 = $m_Ldoodle_core_Color$();
+      var r$1 = $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, offset);
+      var g$1 = $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, ((2 + offset) | 0));
+      var b$1 = $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, ((4 + offset) | 0));
+      return this$8.rgba__I__I__I__D__Ldoodle_core_Color(r$1, g$1, b$1, 1.0);
+      break;
+    }
+    case 8: {
+      return $m_Ldoodle_core_Color$().rgba__I__I__I__D__Ldoodle_core_Color($p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, offset), $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, ((2 + offset) | 0)), $p_Ldoodle_core_Color$__parseDoubleHex$1__T__I__I(this, hex, ((4 + offset) | 0)), $p_Ldoodle_core_Color$__parseDoubleAlpha$1__T__I__D(this, hex, ((6 + offset) | 0)));
+      break;
+    }
+    default: {
+      $p_Ldoodle_core_Color$__error$1__T__E(this, hex);
+    }
+  }
 });
 var $d_Ldoodle_core_Color$ = new $TypeData().initClass($c_Ldoodle_core_Color$, "doodle.core.Color$", ({
   Ldoodle_core_Color$: 1,
