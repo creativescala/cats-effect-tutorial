@@ -89,10 +89,12 @@ lazy val docs =
           (examples.js / Compile / fastOptJS / artifactPath).value
             .getParentFile() / s"${(examples.js / moduleName).value}-fastopt"
         ),
-      laikaTheme := CreativeScalaTheme.empty.addJs(laika.ast.Path.Root / "main.js").build,
+      laikaTheme := CreativeScalaTheme.empty
+        .addJs(laika.ast.Path.Root / "main.js")
+        .build,
       laikaExtensions ++= Seq(
         laika.format.Markdown.GitHubFlavor,
-        laika.config.SyntaxHighlighting,
+        laika.config.SyntaxHighlighting
       ),
       tlSite := Def
         .sequential(
