@@ -84,36 +84,21 @@ lazy val docs =
           )
       ),
       mdocIn := file("docs/src/pages"),
-      css := {
-        val src = file("docs/src/css")
-        val dest1 = mdocOut.value
-        val dest2 = (laikaSite / target).value
-        val cmd1 =
-          s"npx tailwindcss -i ${src.toString}/creative-scala.css -o ${dest1.toString}/creative-scala.css"
-        val cmd2 =
-          s"npx tailwindcss -i ${src.toString}/creative-scala.css -o ${dest2.toString}/creative-scala.css"
-        cmd1 !
-
-        cmd2 !
-      },
       Laika / sourceDirectories ++=
         Seq(
-          file("docs/src/js"),
           (examples.js / Compile / fastOptJS / artifactPath).value
             .getParentFile() / s"${(examples.js / moduleName).value}-fastopt"
         ),
-      laikaTheme := creativeScalaTheme,
+      laikaTheme := CreativeScalaTheme.empty.addJs(laika.ast.Path.Root / "main.js").build,
       laikaExtensions ++= Seq(
         laika.format.Markdown.GitHubFlavor,
         laika.config.SyntaxHighlighting,
-        CreativeScalaDirectives
       ),
       tlSite := Def
         .sequential(
           (examples.js / Compile / fastLinkJS),
           // (Compile / run).toTask(""),
           mdoc.toTask(""),
-          css,
           laikaSite
         )
         .value,

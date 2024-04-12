@@ -27,7 +27,8 @@ import cats.effect.*
 object Basics extends IOApp.Simple {
   // 0. This object extends IOApp.Simple. This allows us to run the object. It
   // expects an IO with the name `run` which describes the program it will run.
-  // So replace `run` below with whatever you want to see when your program is run.
+  // So replace `run` below with whatever you want to see when your program is
+  // run.
   val run = IO(println("Hello!"))
 
   // 1. You can create an IO using IO(...) and IO.pure(...). (The former is the
