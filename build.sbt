@@ -98,11 +98,11 @@ lazy val docs =
       },
       Laika / sourceDirectories ++=
         Seq(
-          file("docs/src/templates"),
+          file("docs/src/js"),
           (examples.js / Compile / fastOptJS / artifactPath).value
             .getParentFile() / s"${(examples.js / moduleName).value}-fastopt"
         ),
-      laikaTheme := Theme.empty,
+      laikaTheme := creativeScalaTheme,
       laikaExtensions ++= Seq(
         laika.format.Markdown.GitHubFlavor,
         laika.config.SyntaxHighlighting,
