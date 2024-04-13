@@ -9,9 +9,9 @@ Most exercises will have solutions, just like the one below. It's a good idea to
 @:solution
 The distinction between the description of an effect and the act of carrying out that description is made clear by defining `run` as a `val`. It can be a `val` *because* an `IO` is just a description. It does nothing until it is run.
 
-1. The different constructors get to the difference between effectful and pure programs. It doesn't matter if we run a pure program multiple time or only once: it always produces the same result. Hence `IO.pure` can evaluate it's argument once (at the time of construction) and cache that value. This is not the case for effectful programs, which use the `apply` constructor. We can illustrate the difference by using, say, `IO.pure(println("Hello"))` and `IO(println("Hello"))`.
+1. The different constructors get to the difference between effectful and pure programs. It doesn't matter if we run a pure program multiple time or only once: it always produces the same result. Hence `IO.pure` can evaluate its argument once (at the time of construction) and cache that value. This is not the case for effectful programs, which use the `apply` constructor. We can illustrate the difference by using, say, `IO.pure(println("Hello"))` and `IO(println("Hello"))`.
 
-2. `IO.realTime.flatMap(println _)`
+2. `IO.realTime.flatMap(IO.println)`
 
 3. If you replace `1` and `2` with effects (e.g. `println`) you can see in what order they are run. It's always the same: left-to-right.
 
@@ -27,9 +27,9 @@ The distinction between the description of an effect and the act of carrying out
    }
    ```
    
-   A more stylish implementation would use a for comprehension.
+   A more stylish implementation would use a `for` comprehension.
    
-6. This is an exercise in reading type signatures. `a *> b` creates an `IO` that runs `a`, discards it's result, and then runs `b`. We can write `log` as
+6. This is an exercise in reading type signatures. `a *> b` creates an `IO` that runs `a`, discards its result, and then runs `b`. We can write `log` as
 
    ```scala
    def log[A](io: IO[A]): IO[A] = {
