@@ -11,7 +11,7 @@ The distinction between the description of an effect and the act of carrying out
 
 1. The different constructors get to the difference between effectful and pure programs. It doesn't matter if we run a pure program multiple time or only once: it always produces the same result. Hence `IO.pure` can evaluate its argument once (at the time of construction) and cache that value. This is not the case for effectful programs, which use the `apply` constructor. We can illustrate the difference by using, say, `IO.pure(println("Hello"))` and `IO(println("Hello"))`.
 
-2. `IO.realTime.flatMap(println _)`
+2. `IO.realTime.flatMap(IO.println)`
 
 3. If you replace `1` and `2` with effects (e.g. `println`) you can see in what order they are run. It's always the same: left-to-right.
 
