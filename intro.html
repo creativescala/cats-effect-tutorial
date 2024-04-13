@@ -50,10 +50,10 @@
                 <p>The distinction between the description of an effect and the act of carrying out that description is made clear by defining <code>run</code> as a <code>val</code>. It can be a <code>val</code> <em>because</em> an <code>IO</code> is just a description. It does nothing until it is run.</p>
                 <ol class="arabic">
                   <li>
-                    <p>The different constructors get to the difference between effectful and pure programs. It doesn&#39;t matter if we run a pure program multiple time or only once: it always produces the same result. Hence <code>IO.pure</code> can evaluate it&#39;s argument once (at the time of construction) and cache that value. This is not the case for effectful programs, which use the <code>apply</code> constructor. We can illustrate the difference by using, say, <code>IO.pure(println(&quot;Hello&quot;))</code> and <code>IO(println(&quot;Hello&quot;))</code>.</p>
+                    <p>The different constructors get to the difference between effectful and pure programs. It doesn&#39;t matter if we run a pure program multiple time or only once: it always produces the same result. Hence <code>IO.pure</code> can evaluate its argument once (at the time of construction) and cache that value. This is not the case for effectful programs, which use the <code>apply</code> constructor. We can illustrate the difference by using, say, <code>IO.pure(println(&quot;Hello&quot;))</code> and <code>IO(println(&quot;Hello&quot;))</code>.</p>
                   </li>
                   <li>
-                    <p><code>IO.realTime.flatMap(println _)</code></p>
+                    <p><code>IO.realTime.flatMap(IO.println)</code></p>
                   </li>
                   <li>
                     <p>If you replace <code>1</code> and <code>2</code> with effects (e.g. <code>println</code>) you can see in what order they are run. It&#39;s always the same: left-to-right.</p>
@@ -68,10 +68,10 @@
    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">io</span><span>)
    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;Stopping&quot;</span><span>).</span><span class="identifier">map</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">a</span><span>))
 }</span></code></pre>
-                    <p>A more stylish implementation would use a for comprehension.</p>
+                    <p>A more stylish implementation would use a <code>for</code> comprehension.</p>
                   </li>
                   <li>
-                    <p>This is an exercise in reading type signatures. <code>a *&gt; b</code> creates an <code>IO</code> that runs <code>a</code>, discards it&#39;s result, and then runs <code>b</code>. We can write <code>log</code> as</p>
+                    <p>This is an exercise in reading type signatures. <code>a *&gt; b</code> creates an <code>IO</code> that runs <code>a</code>, discards its result, and then runs <code>b</code>. We can write <code>log</code> as</p>
                     <pre><code class="nohighlight"><span class="keyword">def</span><span> </span><span class="declaration-name">log</span><span>[</span><span class="type-name">A</span><span>](</span><span class="identifier">io</span><span>: </span><span class="type-name">IO</span><span>[</span><span class="type-name">A</span><span>]): </span><span class="type-name">IO</span><span>[</span><span class="type-name">A</span><span>] = {
  </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;Starting&quot;</span><span>) *&gt; </span><span class="identifier">io</span><span> &lt;* </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;Stopping&quot;</span><span>)
 }</span></code></pre>
