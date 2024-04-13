@@ -62,7 +62,8 @@ val commonSettings = Seq(
   libraryDependencies ++= Seq(
     "org.creativescala" %%% "doodle" % "0.22.0",
     "org.typelevel" %%% "cats-effect" % "3.5.4"
-  )
+  ),
+  Compile / run / fork := true
 )
 
 lazy val root = tlCrossRootProject.aggregate(code, docs, examples)
