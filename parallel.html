@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 1.0.0" />
+    <title>Parallelism</title>
+    
+    
+    <meta name="description" content="docs" />
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Pro:400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="css/creative-scala.css" />
+    <script src="js/toc.js"></script><script src="js/solution.js"></script><script src="main.js"></script>
+    <script> /* for avoiding page load transitions */</script>
+</head>
+
+<body>
+    <nav id="topbar">
+      <details>
+        <summary>Cats Effect Tutorial</summary>
+        <ul class="nav-list">
+          <li class="level1 nav-node"><a href="introduction/">Introduction</a></li>
+          <li class="level2 nav-leaf"><a href="introduction/clock.html">Clock</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Parallelism</a></li>
+        </ul>
+      </details>
+    </nav>
+    <nav id="sidebar">
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="index.html">Cats Effect Tutorial</a></li>
+          <li class="level1 nav-node"><a href="introduction/">Introduction</a></li>
+          <li class="level2 nav-leaf"><a href="introduction/clock.html">Clock</a></li>
+          <li class="level1 active nav-leaf"><a href="#">Parallelism</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <main class="content">
+            <h1 id="parallelism" class="title">Parallelism</h1>
+            <p>If we have two <code>IO</code> values that don&#39;t depend on each other, we should be able to run them in parallel.
+            For example, the following two values could be run in parallel.</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;A&quot;</span><span>)
+</span><span class="keyword">val</span><span> </span><span class="identifier">b</span><span> = </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;B&quot;</span><span>)</span></code></pre>
+            <p>We know that <code>mapN</code> expresses a computation that depends on two independent <code>IO</code> values, but always runs them from left to right.</p>
+            <pre><code class="nohighlight"><span>(</span><span class="identifier">a</span><span>, </span><span class="identifier">b</span><span>).</span><span class="identifier">mapN</span><span>((</span><span class="identifier">_</span><span>, </span><span class="identifier">_</span><span>) =&gt; </span><span class="string-literal">&quot;Done&quot;</span><span>).</span><span class="identifier">unsafeRunSync</span><span>()
+</span><span class="comment">// A
+// B</span></code></pre>
+            <p>The reason for this is <strong>type class coherence</strong>, which is a fancy of way of saying &quot;if you can implement a type class in different ways, all those different ways should give the same result.&quot; To understand this we need to know what a type class is, the two type classes in use here (monad and applicative), and their relationship (monad can implement applicative.) This is out of scope for us here. If you want to know more, <em>Functional Programming Strategies</em> has the details.</p>
+            <p>To get parallelism we can use <code>parMapN</code>. Try the following, and you should see <code>b</code> occasionally runs before <code>a</code>.</p>
+            <pre><code class="nohighlight"><span>(</span><span class="identifier">a</span><span>, </span><span class="identifier">b</span><span>).</span><span class="identifier">parMapN</span><span>((</span><span class="identifier">_</span><span>, </span><span class="identifier">_</span><span>) =&gt; </span><span class="string-literal">&quot;Done&quot;</span><span>).</span><span class="identifier">unsafeRunSync</span><span>()</span></code></pre>
+            <div class="callout info">
+              
+              <h4 id="parallelism-versus-concurrency">Parallelism versus Concurrency</h4>
+              <p>Let&#39;s be clear on the difference between <strong>parallelism</strong> and <strong>concurrency</strong>:</p>
+              <ul>
+                <li>
+                  <p>Parallelism means multiple things running at the same time, even though we might not be able to see this. For example, <a href="https://en.wikipedia.org/wiki/Single_instruction,_multiple_data">SIMD</a> instructions on your CPU do multiple operations at the same time, but you cannot observe the intermediate results and hence cannot observe the parallelism. From the programmer&#39;s point of view you call the instruction on the CPU and get back the result.</p>
+                </li>
+                <li>
+                  <p>Concurrency means we can observe multiple things happening in overlapping time periods, even though they might not actually be running at the same time (i.e. they might not be parallel.) An example is Javascript. It has a single-threaded runtime but we can still observe race conditions between different callback functions.</p>
+                </li>
+              </ul>
+            </div>
+            <div class="flex flex-row justify-between">
+                <a class="pageNavigation" href="introduction/clock.html">←Clock</a> 
+            </div>
+        </main>
+        <footer>Creative Scala is copyright Noel Welsh</footer>
+    </div>
+
+    </div>
+</body>
+
+</html>

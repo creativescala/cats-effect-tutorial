@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 1.0.0" />
+    <title>Clock</title>
+    
+    
+    <meta name="description" content="docs" />
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Pro:400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="../css/creative-scala.css" />
+    <script src="../js/toc.js"></script><script src="../js/solution.js"></script><script src="../main.js"></script>
+    <script> /* for avoiding page load transitions */</script>
+</head>
+
+<body>
+    <nav id="topbar">
+      <details>
+        <summary>Cats Effect Tutorial</summary>
+        <ul class="nav-list">
+          <li class="level1 nav-node"><a href="index.html">Introduction</a></li>
+          <li class="level2 active nav-leaf"><a href="#">Clock</a></li>
+          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism</a></li>
+        </ul>
+      </details>
+    </nav>
+    <nav id="sidebar">
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="../">Cats Effect Tutorial</a></li>
+          <li class="level1 nav-node"><a href="index.html">Introduction</a></li>
+          <li class="level2 active nav-leaf"><a href="#">Clock</a></li>
+          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <main class="content">
+            <h1 id="clock" class="title">Clock</h1>
+            <p>In this exercise we put together the basics we&#39;ve just learned about using Cats Effect to create a complete program that will make a clock like the one shown below.</p>
+            <div class="doodle" id="clock-mount"></div>
+            <script>Clock.draw("clock-mount")</script>
+            <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/introduction/02-clock.scala"><code>code/src/main/scala/introduction/02-clock.scala</code></a>.</p>
+            <p>As a creative person, you probably want to put your own mark on the clock. For example, you might want to rotate and flip the arcs that display the time, so that they start at the twelve o&#39;clock position and rotate clockwise, or perhaps you want to change the colors. Go ahead and do this! Make it your own!</p>
+            <div class="solution">
+              <div class="solution-body">
+                <p>The core of the clock is the following loop</p>
+                <pre><code class="nohighlight"><span class="keyword">def</span><span> </span><span class="declaration-name">clock</span><span>(</span><span class="identifier">canvas</span><span>: </span><span class="type-name">Canvas</span><span>): </span><span class="type-name">IO</span><span>[</span><span class="type-name">Nothing</span><span>] =
+  </span><span class="type-name">IO</span><span>.</span><span class="identifier">sleep</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>) *&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">realTimeInstant</span><span>
+    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">instant</span><span> =&gt; </span><span class="identifier">draw</span><span>(</span><span class="identifier">instantToLocalTime</span><span>(</span><span class="identifier">instant</span><span>), </span><span class="identifier">canvas</span><span>))
+    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">clock</span><span>(</span><span class="identifier">canvas</span><span>))</span></code></pre>
+                <p>Why do we have to use <code>flatMap</code> for the final recursive call back to <code>clock</code>? It seems we could just write</p>
+                <pre><code class="nohighlight"><span>*&gt; </span><span class="identifier">clock</span><span>(</span><span class="identifier">canvas</span><span>)</span></code></pre>
+                <p>this doesn&#39;t work. Why not?</p>
+              </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <a class="pageNavigation" href="index.html">←Introduction</a> <a class="pageNavigation" href="../parallel.html">Parallelism→</a>
+            </div>
+        </main>
+        <footer>Creative Scala is copyright Noel Welsh</footer>
+    </div>
+
+    </div>
+</body>
+
+</html>
