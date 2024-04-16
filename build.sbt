@@ -76,6 +76,7 @@ lazy val docs =
   project
     .in(file("docs"))
     .settings(
+      commonSettings,
       laikaConfig := laikaConfig.value.withConfigValue(
         LinkConfig.empty
           .addApiLinks(
@@ -84,7 +85,7 @@ lazy val docs =
             )
           )
       ),
-      mdocIn := file("docs/src/pages"),
+      mdocIn := file("src/pages"),
       Laika / sourceDirectories ++=
         Seq(
           (examples.js / Compile / fastOptJS / artifactPath).value

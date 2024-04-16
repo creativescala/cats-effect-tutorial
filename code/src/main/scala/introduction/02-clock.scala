@@ -19,13 +19,14 @@ package introduction
 // You will probably need this import
 // import scala.concurrent.duration.*
 
-import java.time.*
-
-import cats.effect.{IO, IOApp}
+import cats.effect.IO
+import cats.effect.IOApp
 import doodle.core.*
 import doodle.core.font.Font
 import doodle.java2d.*
 import doodle.syntax.all.*
+
+import java.time.*
 
 object Clock extends IOApp.Simple {
   // This describes the background on which we'll render the clock
