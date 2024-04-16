@@ -53,6 +53,8 @@ commands += Command.command("build") { state =>
     "headerCreateAll" ::
     "githubWorkflowGenerate" ::
     "docs / tlSite" ::
+    "dependencyUpdates" ::
+    "reload plugins; dependencyUpdates; reload return" ::
     state
 }
 
@@ -71,6 +73,7 @@ lazy val root = tlCrossRootProject.aggregate(code, docs, examples)
 lazy val code = project
   .in(file("code"))
   .settings(commonSettings)
+  .enablePlugins(JmhPlugin)
 
 lazy val docs =
   project
