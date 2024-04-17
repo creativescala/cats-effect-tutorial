@@ -76,3 +76,9 @@ Now we use `parMapN`.
 We get *both* failures.
 @:@
 
+
+There are a bunch of `par` methods. Here are the most useful ones, and simplified type signatures.
+
+* `(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]`
+* `(F[A], ..., F[Z]).parMapN((A, ..., Z) => α): α`
+* `G[F[A]].parSequence: F[G[A]]`
