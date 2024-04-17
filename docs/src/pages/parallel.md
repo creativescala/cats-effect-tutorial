@@ -82,3 +82,4 @@ There are a bunch of `par` methods. Here are the most useful ones, and simplifie
 * `(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]`
 * `(F[A], ..., F[Z]).parMapN((A, ..., Z) => α): α`
 * `G[F[A]].parSequence: F[G[A]]`
+* `G[A].parTraverse(A => F[B]): F[G[B]]`
