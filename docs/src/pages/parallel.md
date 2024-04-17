@@ -40,3 +40,39 @@ Let's be clear on the difference between **parallelism** and **concurrency**:
 
 - Concurrency means we can observe multiple things happening in overlapping time periods, even though they might not actually be running at the same time (i.e. they might not be parallel.) An example is Javascript. It has a single-threaded runtime but we can still observe race conditions between different callback functions.
 @:@
+
+How does `parMap` work? It's either *dark magic* or an instance of the [Parallel](https://typelevel.org/cats/typeclasses/parallel.html) type class. Despite it's name, `Parallel` is not about running code in parallel. It's just about having a different implementation of `mapN` and friends with different semantics. For `IO` these different semantics are, coincidently, about parallelism, but you can call `parMapN` on `Either` and get something else.
+
+@:exercise(Parallel Either)
+What does `parMapN` do on `Either`? Create some code examples illustrating the difference between the usual `mapN`.
+
+Note: you will need to `import cats.syntax.all.*` to make `mapN` etc. available.
+
+@:@
+@:solution
+`parMapN` accumulates errors. Here's an example. Start by defining two failed `Eithers`.
+
+```scala mdoc:silent
+import cats.syntax.all.*
+
+val failed1: Either[List[String], Int] = Left(List("Oh no! I failed!"))
+val failed2: Either[List[String], Int] = Left(List("Oh no! I also failed!"))
+```
+
+Now let's see what happens when we use `mapN`.
+
+```scala mdoc
+(failed1, failed2).mapN((a, b) => a + b)
+```
+
+We get only the first failure. 
+
+Now we use `parMapN`.
+
+```scala mdoc
+(failed1, failed2).parMapN((a, b) => a + b)
+```
+
+We get *both* failures.
+@:@
+
