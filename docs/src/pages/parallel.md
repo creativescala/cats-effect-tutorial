@@ -77,9 +77,9 @@ We get *both* failures.
 @:@
 
 
-There are a bunch of `par` methods. Here are the most useful ones, and simplified type signatures.
+There are a bunch of `par` methods. Here are the most useful ones, with simplified type signatures.
 
 * `(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]`
-* `(F[A], ..., F[Z]).parMapN((A, ..., Z) => α): α`
+* `(F[A], ..., F[Z]).parMapN((A, ..., Z) => AA): AA`
 * `G[F[A]].parSequence: F[G[A]]`
 * `G[A].parTraverse(A => F[B]): F[G[B]]`
