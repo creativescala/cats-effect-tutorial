@@ -94,6 +94,12 @@
                 <p>We get <em>both</em> failures.</p>
               </div>
             </div>
+            <p>There are a bunch of <code>par</code> methods. Here are the most useful ones, and simplified type signatures.</p>
+            <ul>
+              <li><code>(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]</code></li>
+              <li><code>(F[A], ..., F[Z]).parMapN((A, ..., Z) =&gt; α): α</code></li>
+              <li><code>G[F[A]].parSequence: F[G[A]]</code></li>
+            </ul>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="introduction/clock.html">←Clock</a> 
             </div>
