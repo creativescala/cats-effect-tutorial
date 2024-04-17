@@ -68,6 +68,32 @@
                 </li>
               </ul>
             </div>
+            <p>How does <code>parMap</code> work? It&#39;s either <em>dark magic</em> or an instance of the <a href="https://typelevel.org/cats/typeclasses/parallel.html">Parallel</a> type class. Despite it&#39;s name, <code>Parallel</code> is not about running code in parallel. It&#39;s just about having a different implementation of <code>mapN</code> and friends with different semantics. For <code>IO</code> these different semantics are, coincidently, about parallelism, but you can call <code>parMapN</code> on <code>Either</code> and get something else.</p>
+            <div class="exercise">
+              
+              <h4 id="exercise-parallel-either">Exercise: Parallel Either</h4>
+              <p>What does <code>parMapN</code> do on <code>Either</code>? Create some code examples illustrating the difference between the usual <code>mapN</code>.</p>
+              <p>Note: you will need to <code>import cats.syntax.all.*</code> to make <code>mapN</code> etc. available.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <p><code>parMapN</code> accumulates errors. Here&#39;s an example. Start by defining two failed <code>Eithers</code>.</p>
+                <pre><code class="nohighlight"><span class="keyword">import</span><span> </span><span class="identifier">cats</span><span>.</span><span class="identifier">syntax</span><span>.</span><span class="identifier">all</span><span>.*
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">failed1</span><span>: </span><span class="type-name">Either</span><span>[</span><span class="type-name">List</span><span>[</span><span class="type-name">String</span><span>], </span><span class="type-name">Int</span><span>] = </span><span class="type-name">Left</span><span>(</span><span class="type-name">List</span><span>(</span><span class="string-literal">&quot;Oh no! I failed!&quot;</span><span>))
+</span><span class="keyword">val</span><span> </span><span class="identifier">failed2</span><span>: </span><span class="type-name">Either</span><span>[</span><span class="type-name">List</span><span>[</span><span class="type-name">String</span><span>], </span><span class="type-name">Int</span><span>] = </span><span class="type-name">Left</span><span>(</span><span class="type-name">List</span><span>(</span><span class="string-literal">&quot;Oh no! I also failed!&quot;</span><span>))</span></code></pre>
+                <p>Now let&#39;s see what happens when we use <code>mapN</code>.</p>
+                <pre><code class="nohighlight"><span>(</span><span class="identifier">failed1</span><span>, </span><span class="identifier">failed2</span><span>).</span><span class="identifier">mapN</span><span>((</span><span class="identifier">a</span><span>, </span><span class="identifier">b</span><span>) =&gt; </span><span class="identifier">a</span><span> + </span><span class="identifier">b</span><span>)
+</span><span class="comment">// res2: Either[List[String], Int] = Left(value = List(&quot;Oh no! I failed!&quot;))</span></code></pre>
+                <p>We get only the first failure. </p>
+                <p>Now we use <code>parMapN</code>.</p>
+                <pre><code class="nohighlight"><span>(</span><span class="identifier">failed1</span><span>, </span><span class="identifier">failed2</span><span>).</span><span class="identifier">parMapN</span><span>((</span><span class="identifier">a</span><span>, </span><span class="identifier">b</span><span>) =&gt; </span><span class="identifier">a</span><span> + </span><span class="identifier">b</span><span>)
+</span><span class="comment">// res3: Either[List[String], Int] = Left(
+//   value = List(&quot;Oh no! I failed!&quot;, &quot;Oh no! I also failed!&quot;)
+// )</span></code></pre>
+                <p>We get <em>both</em> failures.</p>
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="introduction/clock.html">←Clock</a> 
             </div>
