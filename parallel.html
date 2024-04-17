@@ -99,6 +99,7 @@
               <li><code>(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]</code></li>
               <li><code>(F[A], ..., F[Z]).parMapN((A, ..., Z) =&gt; α): α</code></li>
               <li><code>G[F[A]].parSequence: F[G[A]]</code></li>
+              <li><code>G[A].parTraverse(A =&gt; F[B]): F[G[B]]</code></li>
             </ul>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="introduction/clock.html">←Clock</a> 
