@@ -83,3 +83,7 @@ There are a bunch of `par` methods. Here are the most useful ones, with simplifi
 * `(F[A], ..., F[Z]).parMapN((A, ..., Z) => AA): AA`
 * `G[F[A]].parSequence: F[G[A]]`
 * `G[A].parTraverse(A => F[B]): F[G[B]]`
+
+Complete the challenge in [`code/src/main/scala/parallelism/01-parallelism.scala`][clock].
+
+[parallelism]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/01-parallelism.scala
