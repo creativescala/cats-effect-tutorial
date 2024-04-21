@@ -63,6 +63,9 @@ object Basics extends IOApp.Simple {
   }
 
   // 5. Write a method that adds logging before and after an IO
+  // Here's an example of how to use it:
+  //
+  // log(IO.realTime).flatMap(time => IO.println(s"The time is $time"))
 
   // 6. What do the *> and <* methods do? Could you use them in the logging
   // method you just wrote?
