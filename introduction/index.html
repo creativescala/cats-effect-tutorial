@@ -28,7 +28,7 @@
         <ul class="nav-list">
           <li class="level1 active nav-node"><a href="#">Introduction</a></li>
           <li class="level2 nav-leaf"><a href="clock.html">Clock</a></li>
-          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism</a></li>
+          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism and Concurrency</a></li>
         </ul>
       </details>
     </nav>
@@ -37,14 +37,15 @@
           <li class="level1 nav-leaf"><a href="../">Cats Effect Tutorial</a></li>
           <li class="level1 active nav-node"><a href="#">Introduction</a></li>
           <li class="level2 nav-leaf"><a href="clock.html">Clock</a></li>
-          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism</a></li>
+          <li class="level1 nav-leaf"><a href="../parallel.html">Parallelism and Concurrency</a></li>
         </ul>
     </nav>
 
     <div id="content">
         <main class="content">
             <h1 id="introduction" class="title">Introduction</h1>
-            <p>To start with we should explain what an effect is, and hence the problem that Cats Effect is solving. There is already an <a href="https://www.inner-product.com/posts/what-is-an-effect/">excellent blog post</a> that does just that, so go and read it now.</p>
+            <p>To start with we are going to learn what an effect is, and the very basics of how <code>IO</code> works: how we can construct an <code>IO</code>, and how we can combine multiple <code>IOs</code> together.</p>
+            <p>We need to understand what an effect is and hence what problem that Cats Effect is solving. There is already an <a href="https://www.inner-product.com/posts/what-is-an-effect/">excellent blog post</a> that does just that, so go and read it now.</p>
             <p>Now you understand what problem Cats Effect is trying to solve, and what it means for <code>IO</code> to be an effect type, let&#39;s start using <code>IO</code>. Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/introduction/01-basics.scala"><code>code/src/main/scala/introduction/01-basics.scala</code></a>.</p>
             <p>Most exercises will have solutions, just like the one below. It&#39;s a good idea to read them <em>even if you successfully solved the exercise</em>, as they&#39;ll talk about the lessons you should learn from the exercise, not just the solution to the exercise itself.</p>
             <div class="solution">
@@ -61,7 +62,7 @@
                     <p>If you replace <code>1</code> and <code>2</code> with effects (e.g. <code>println</code>) you can see in what order they are run. It&#39;s always the same: left-to-right.</p>
                   </li>
                   <li>
-                    <p>It&#39;s incorrect. This is a common error. <code>IO</code> is a description, to writing <code>val _ = io</code> does nothing.</p>
+                    <p>It&#39;s incorrect. This is a common error. <code>IO</code> is a description, so writing <code>val _ = io</code> does nothing.</p>
                   </li>
                   <li>
                     <p>This will do</p>
