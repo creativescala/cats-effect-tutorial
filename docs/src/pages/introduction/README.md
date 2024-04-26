@@ -1,6 +1,8 @@
 # Introduction
 
-To start with we should explain what an effect is, and hence the problem that Cats Effect is solving. There is already an [excellent blog post][effect] that does just that, so go and read it now.
+To start with we are going to learn what an effect is, and the very basics of how `IO` works: how we can construct an `IO`, and how we can combine multiple `IOs` together.
+
+We need to understand what an effect is and hence what problem that Cats Effect is solving. There is already an [excellent blog post][effect] that does just that, so go and read it now.
 
 Now you understand what problem Cats Effect is trying to solve, and what it means for `IO` to be an effect type, let's start using `IO`. Complete the challenge in [`code/src/main/scala/introduction/01-basics.scala`][basics].
 
@@ -15,7 +17,7 @@ The distinction between the description of an effect and the act of carrying out
 
 3. If you replace `1` and `2` with effects (e.g. `println`) you can see in what order they are run. It's always the same: left-to-right.
 
-4. It's incorrect. This is a common error. `IO` is a description, to writing `val _ = io` does nothing.
+4. It's incorrect. This is a common error. `IO` is a description, so writing `val _ = io` does nothing.
 
 5. This will do
 
