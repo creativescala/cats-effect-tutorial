@@ -1,10 +1,23 @@
-# Parallelism
+# Parallelism and Concurrency
 
 ```scala mdoc:invisible
 import cats.effect.*
 import cats.effect.unsafe.implicits.global
 import cats.syntax.all.*
 ```
+
+We will now start exploring one of the main effects that people use Cats Effect for: parallelism and concurrency.
+
+@:exercise(Parallelism vs Concurrency)
+What's the difference between parallelism and concurrency?
+@:@
+@:solution
+Let's be clear on the difference between **parallelism** and **concurrency**:
+
+- Parallelism means multiple things running at the same time, even though we might not be able to see this. For example, [SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data) instructions on your CPU do multiple operations at the same time, but you cannot observe the intermediate results and hence cannot observe the parallelism. From the programmer's point of view you call the instruction on the CPU and get back the result.
+
+- Concurrency means we can observe multiple things happening in overlapping time periods, even though they might not actually be running at the same time (i.e. they might not be parallel.) An example is Javascript. It has a single-threaded runtime but we can still observe race conditions between different callback functions.
+@:@
 
 If we have two `IO` values that don't depend on each other, we should be able to run them in parallel.
 For example, the following two values could be run in parallel.
@@ -30,16 +43,15 @@ To get parallelism we can use `parMapN`. Try the following, and you should see `
 (a, b).parMapN((_, _) => "Done").unsafeRunSync()
 ```
 
-
-@:callout(info)
-#### Parallelism versus Concurrency
-
-Let's be clear on the difference between **parallelism** and **concurrency**:
-
-- Parallelism means multiple things running at the same time, even though we might not be able to see this. For example, [SIMD](https://en.wikipedia.org/wiki/Single_instruction,_multiple_data) instructions on your CPU do multiple operations at the same time, but you cannot observe the intermediate results and hence cannot observe the parallelism. From the programmer's point of view you call the instruction on the CPU and get back the result.
-
-- Concurrency means we can observe multiple things happening in overlapping time periods, even though they might not actually be running at the same time (i.e. they might not be parallel.) An example is Javascript. It has a single-threaded runtime but we can still observe race conditions between different callback functions.
+@:exercise(Parallelism or Concurrency?)
+Does `parMapN` display parallelism, concurrency, neither, or both?
 @:@
+@:solution
+It's both. It depends on the effects you run with `parMapN`, so it's not really a property of `parMapN` but of both `parMapN` and the effects that are being run.
+
+If the effects being run only compute values, so we have no way of observing that are doing stuff, then we have just parallelism. However, if we can observe them being run, as we can when we use `IO.println`, then we have concurrency.
+@:@
+
 
 How does `parMap` work? It's either *dark magic* or an instance of the [Parallel](https://typelevel.org/cats/typeclasses/parallel.html) type class. Despite it's name, `Parallel` is not about running code in parallel. It's just about having a different implementation of `mapN` and friends with different semantics. For `IO` these different semantics are, coincidently, about parallelism, but you can call `parMapN` on `Either` and get something else.
 
