@@ -9,7 +9,7 @@ import cats.syntax.all.*
 There aren't many concurrent programs that don't require some interaction between the different parts. The Cats Effects [standard library][std] provides useful tools for coordinating concurrent processes. There is also [Ref][ref], which is part of the `kernel`, and is one of the most basic tools on which many others are built.
 
 
-## Constructing Ref
+## Using Ref
 
 The simplest way to create a `Ref` is to use `IO.ref`.
 
@@ -24,8 +24,8 @@ The type looks a bit complicated. Unpacking it we have:
 
 You'll have to get used to these kind of types when using Cats Effect.
 
-
-## Using Ref
+Complete the challenge in [`code/src/main/scala/parallelism/02-ref.scala`][ref-exercise].
 
 [std]: https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html
 [ref]: https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html
+[ref-exercise]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-ref.scala
