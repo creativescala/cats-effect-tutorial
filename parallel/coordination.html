@@ -46,7 +46,7 @@
     <div id="content">
         <main class="content">
             <h1 id="concurrent-coordination" class="title">Concurrent Coordination</h1>
-            <p>There aren&#39;t many concurrent programs that don&#39;t require some interaction between the different parts. The Cats Effects <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html">standard library</a> provides useful tools for coordinating concurrent processes. There is also <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html">Ref</a>, which is part of the <code>kernel</code>, and is one of the most basic tools on which many others are built.</p>
+            <p>There aren&#39;t many concurrent programs that don&#39;t require some interaction between the different parts. The Cats Effects <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html">standard library</a> provides useful tools for communication between concurrent processes. There is also <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html">Ref</a> and <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Deferred.html">Deferred</a>, which are part of the <code>kernel</code>, and some the most basic tools on which many others are built.</p>
             
             <h2 id="using-ref" class="section">Using Ref</h2>
             <p>The simplest way to create a <code>Ref</code> is to use <code>IO.ref</code>.</p>
@@ -58,6 +58,9 @@
             </ul>
             <p>You&#39;ll have to get used to these kind of types when using Cats Effect.</p>
             <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-ref.scala"><code>code/src/main/scala/parallelism/02-ref.scala</code></a>.</p>
+            
+            <h2 id="deferred" class="section">Deferred</h2>
+            <p><code>Ref</code> is good for accumulating results, but for coordination <code>Deferred</code> is a better choice.</p>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="index.html">←Parallelism and Concurrency</a> 
             </div>
