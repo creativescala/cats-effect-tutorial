@@ -132,5 +132,5 @@ object Deferrence extends IOApp.Simple {
       sum <- eval(job)
       _ <- IO.println("Stopping job...")
       _ <- IO.println(s"Result was $sum")
-    } yield sum
+    } yield ()
 }
