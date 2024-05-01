@@ -18,10 +18,8 @@ package parallelism
 
 import cats.effect.*
 import cats.syntax.all.*
-import doodle.core.*
 import doodle.java2d.*
 import doodle.random.*
-import doodle.syntax.all.*
 
 import scala.concurrent.duration.*
 
