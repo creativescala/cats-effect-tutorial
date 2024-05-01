@@ -96,6 +96,7 @@ There are a bunch of `par` methods. Here are the most useful ones, with simplifi
 * `G[F[A]].parSequence: F[G[A]]`
 * `G[A].parTraverse(A => F[B]): F[G[B]]`
 
-Complete the challenge in [`code/src/main/scala/parallelism/01-parallelism.scala`][clock].
+Complete the challenge in [`code/src/main/scala/parallelism/01-parallelism.scala`][parallelism] to increase your familiarity with `parMapN` and friends, and then complete [`code/src/main/scala/parallelism/02-job-manager.scala`][job-manager] to use the tools in a somewhat realistic context.
 
 [parallelism]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/01-parallelism.scala
+[job-manager]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-job-manager.scala

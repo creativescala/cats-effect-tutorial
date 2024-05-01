@@ -29,9 +29,15 @@ Complete the challenge in [`code/src/main/scala/parallelism/02-ref.scala`][ref-e
 
 ## Deferred
 
-`Ref` is good for accumulating results, but for coordination `Deferred` is a better choice.
+`Ref` is good for accumulating results, but for coordination `Deferred` is a better choice. The [Deferred documentation][deferred-doc] gives a good overview of use.
+
+Complete the challenge in [`code/src/main/scala/parallelism/03-deferred.scala`][deferred-exercise].
+
+@:doodle("job-manager", "JobManager.go")
 
 [std]: https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html
 [ref]: https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html
 [deferred]: https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Deferred.html
+[deferred-doc]: https://typelevel.org/cats-effect/docs/std/deferred
 [ref-exercise]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-ref.scala
+[deferred-exercise]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/03-deferred.scala
