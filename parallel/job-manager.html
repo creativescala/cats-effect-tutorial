@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="Laika 1.0.0" />
+    <title>Job Manager</title>
+    
+    
+    <meta name="description" content="docs" />
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <link href="https://fonts.googleapis.com/css?family=Source+Code+Pro:400|Source+Sans+Pro:300,400,600"
+        rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css?family=Crimson+Pro:400" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" type="text/css" href="../css/creative-scala.css" />
+    <script src="../js/toc.js"></script><script src="../js/solution.js"></script><script src="../main.js"></script>
+    <script> /* for avoiding page load transitions */</script>
+</head>
+
+<body>
+    <nav id="topbar">
+      <details>
+        <summary>Cats Effect Tutorial</summary>
+        <ul class="nav-list">
+          <li class="level1 nav-node"><a href="../introduction/">Introduction</a></li>
+          <li class="level2 nav-leaf"><a href="../introduction/clock.html">Clock</a></li>
+          <li class="level1 nav-node"><a href="index.html">Parallelism and Concurrency</a></li>
+          <li class="level2 nav-leaf"><a href="coordination.html">Concurrent Coordination</a></li>
+          <li class="level2 active nav-leaf"><a href="#">Job Manager</a></li>
+        </ul>
+      </details>
+    </nav>
+    <nav id="sidebar">
+        <ul class="nav-list">
+          <li class="level1 nav-leaf"><a href="../">Cats Effect Tutorial</a></li>
+          <li class="level1 nav-node"><a href="../introduction/">Introduction</a></li>
+          <li class="level2 nav-leaf"><a href="../introduction/clock.html">Clock</a></li>
+          <li class="level1 nav-node"><a href="index.html">Parallelism and Concurrency</a></li>
+          <li class="level2 nav-leaf"><a href="coordination.html">Concurrent Coordination</a></li>
+          <li class="level2 active nav-leaf"><a href="#">Job Manager</a></li>
+        </ul>
+    </nav>
+
+    <div id="content">
+        <main class="content">
+            <h1 id="job-manager" class="title">Job Manager</h1>
+            <p>Our final challenge for this section returns to the Job Manager. In this case we&#39;re going to the concurrent tools we&#39;ve just learned about to visualize the progress of running a job. Below you&#39;ll see an example of the output you should end up with.</p>
+            <div class="doodle" id="job-manager"></div>
+            <script>JobManager.go("job-manager")</script>
+            <div class="exercise">
+              
+              <h4 id="exercise-job-manager">Exercise: Job Manager</h4>
+              <p>Complete <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/04-job-manager-visualize.scala"><code>code/src/main/scala/parallelism/04-job-manager-visualize.scala</code></a>.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <p>There are many different ways you could solve this problem. Part of the challenge is coming up with a way to solve it, using the available tools. Here&#39;s an example implementation that uses just a <code>Semaphore</code>.</p>
+                <pre><code class="nohighlight"><span class="comment">// Evaluate a Stage, creating an IO that runs the Stage correctly.
+</span><span class="keyword">def</span><span> </span><span class="declaration-name">evalStage</span><span>(
+    </span><span class="identifier">stage</span><span>: </span><span class="type-name">Stage</span><span>,
+    </span><span class="identifier">results</span><span>: </span><span class="type-name">List</span><span>[</span><span class="type-name">Result</span><span>],
+    </span><span class="identifier">canvas</span><span>: </span><span class="type-name">Canvas</span><span>
+): </span><span class="type-name">IO</span><span>[(</span><span class="type-name">Int</span><span>, </span><span class="type-name">Result</span><span>)] =
+  </span><span class="identifier">stage</span><span> </span><span class="keyword">match</span><span> {
+    </span><span class="keyword">case</span><span> </span><span class="type-name">Stage</span><span>.</span><span class="type-name">Sequential</span><span>(</span><span class="identifier">work</span><span>) =&gt;
+      </span><span class="identifier">draw</span><span>(</span><span class="identifier">results</span><span> :+ </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageInProgress</span><span>(</span><span class="number-literal">0</span><span>, </span><span class="number-literal">1</span><span>), </span><span class="identifier">canvas</span><span>)
+        .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">work</span><span>)
+        .</span><span class="identifier">map</span><span>(</span><span class="identifier">i</span><span> =&gt; (</span><span class="identifier">i</span><span>, </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageComplete</span><span>(</span><span class="number-literal">1</span><span>)))
+    </span><span class="keyword">case</span><span> </span><span class="type-name">Stage</span><span>.</span><span class="type-name">Parallel</span><span>(</span><span class="identifier">repeats</span><span>, </span><span class="identifier">work</span><span>) =&gt;
+      </span><span class="type-name">Semaphore</span><span>[</span><span class="type-name">IO</span><span>](</span><span class="number-literal">0</span><span>).</span><span class="identifier">flatMap</span><span> { </span><span class="identifier">s</span><span> =&gt;
+        </span><span class="keyword">def</span><span> </span><span class="declaration-name">monitor</span><span>(</span><span class="identifier">count</span><span>: </span><span class="type-name">Int</span><span>): </span><span class="type-name">IO</span><span>[</span><span class="type-name">Unit</span><span>] =
+          </span><span class="keyword">if</span><span> </span><span class="identifier">count</span><span> == </span><span class="identifier">repeats</span><span> </span><span class="identifier">then</span><span>
+            </span><span class="identifier">draw</span><span>(</span><span class="identifier">results</span><span> :+ </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageInProgress</span><span>(</span><span class="identifier">count</span><span>, </span><span class="identifier">repeats</span><span>), </span><span class="identifier">canvas</span><span>)
+          </span><span class="keyword">else</span><span>
+            </span><span class="identifier">s</span><span>.</span><span class="identifier">acquire</span><span> *&gt;
+              </span><span class="identifier">draw</span><span>(
+                </span><span class="identifier">results</span><span> :+ </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageInProgress</span><span>(</span><span class="identifier">count</span><span>, </span><span class="identifier">repeats</span><span>),
+                </span><span class="identifier">canvas</span><span>
+              ) *&gt; </span><span class="identifier">monitor</span><span>(</span><span class="identifier">count</span><span> + </span><span class="number-literal">1</span><span>)
+
+        </span><span class="keyword">val</span><span> </span><span class="identifier">parallelWork</span><span> =
+          </span><span class="type-name">List</span><span>
+            .</span><span class="identifier">fill</span><span>(</span><span class="identifier">repeats</span><span>)(</span><span class="identifier">work</span><span>.</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">r</span><span> =&gt; </span><span class="identifier">s</span><span>.</span><span class="identifier">release</span><span> *&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">pure</span><span>(</span><span class="identifier">r</span><span>)))
+            .</span><span class="identifier">parSequence</span><span>
+
+        </span><span class="identifier">draw</span><span>(</span><span class="identifier">results</span><span> :+ </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageInProgress</span><span>(</span><span class="number-literal">0</span><span>, </span><span class="identifier">repeats</span><span>), </span><span class="identifier">canvas</span><span>) *&gt;
+          (</span><span class="identifier">parallelWork</span><span>, </span><span class="identifier">monitor</span><span>(</span><span class="number-literal">0</span><span>)).</span><span class="identifier">parMapN</span><span>((</span><span class="identifier">results</span><span>, </span><span class="identifier">_</span><span>) =&gt;
+            (</span><span class="identifier">results</span><span>.</span><span class="identifier">sum</span><span>, </span><span class="type-name">Result</span><span>.</span><span class="type-name">StageComplete</span><span>(</span><span class="identifier">repeats</span><span>))
+          )
+      }
+  }
+
+</span><span class="comment">// Evaluate the Job, creating an IO that runs all the stages in the correct
+// order and returns the sum of the values computed by each stage.
+</span><span class="keyword">def</span><span> </span><span class="declaration-name">eval</span><span>(</span><span class="identifier">job</span><span>: </span><span class="type-name">Job</span><span>, </span><span class="identifier">canvas</span><span>: </span><span class="type-name">Canvas</span><span>): </span><span class="type-name">IO</span><span>[</span><span class="type-name">Int</span><span>] =
+  </span><span class="identifier">job</span><span>.</span><span class="identifier">stages</span><span>
+    .</span><span class="identifier">foldLeftM</span><span>[</span><span class="type-name">IO</span><span>, (</span><span class="type-name">Int</span><span>, </span><span class="type-name">List</span><span>[</span><span class="type-name">Result</span><span>])]((</span><span class="number-literal">0</span><span>, </span><span class="type-name">List</span><span>.</span><span class="identifier">empty</span><span>[</span><span class="type-name">Result</span><span>]))(
+      (</span><span class="identifier">accum</span><span>, </span><span class="identifier">elt</span><span>) =&gt;
+        </span><span class="keyword">val</span><span> (</span><span class="identifier">total</span><span>, </span><span class="identifier">results</span><span>) = </span><span class="identifier">accum</span><span>
+        </span><span class="identifier">evalStage</span><span>(</span><span class="identifier">elt</span><span>, </span><span class="identifier">results</span><span>, </span><span class="identifier">canvas</span><span>)
+          .</span><span class="identifier">map</span><span> { </span><span class="keyword">case</span><span> (</span><span class="identifier">i</span><span>, </span><span class="identifier">r</span><span>) =&gt; (</span><span class="identifier">total</span><span> + </span><span class="identifier">i</span><span>, </span><span class="identifier">results</span><span> :+ </span><span class="identifier">r</span><span>) }
+          .</span><span class="identifier">flatTap</span><span> { </span><span class="keyword">case</span><span> (</span><span class="identifier">_</span><span>, </span><span class="identifier">results</span><span>) =&gt; </span><span class="identifier">draw</span><span>(</span><span class="identifier">results</span><span>, </span><span class="identifier">canvas</span><span>) }
+    )
+    .</span><span class="identifier">flatMap</span><span> { </span><span class="keyword">case</span><span> (</span><span class="identifier">sum</span><span>, </span><span class="identifier">results</span><span>) =&gt;
+      </span><span class="identifier">draw</span><span>(</span><span class="identifier">results</span><span> :+ </span><span class="type-name">Result</span><span>.</span><span class="type-name">Complete</span><span>(</span><span class="identifier">sum</span><span>), </span><span class="identifier">canvas</span><span>).</span><span class="identifier">as</span><span>(</span><span class="identifier">sum</span><span>)
+    }
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">run</span><span> =
+  </span><span class="type-name">Frame</span><span>.</span><span class="keyword">default</span><span>
+    .</span><span class="identifier">withSize</span><span>(</span><span class="number-literal">800</span><span>, </span><span class="number-literal">200</span><span>)
+    .</span><span class="identifier">canvas</span><span>()
+    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">c</span><span> =&gt;
+      (</span><span class="identifier">randomJob</span><span>.</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">job</span><span> =&gt; </span><span class="identifier">eval</span><span>(</span><span class="identifier">job</span><span>, </span><span class="identifier">c</span><span>)) *&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">sleep</span><span>(</span><span class="number-literal">5</span><span>.</span><span class="identifier">seconds</span><span>))
+        .</span><span class="identifier">replicateA_</span><span>(</span><span class="number-literal">5</span><span>)
+    )</span></code></pre>
+              </div>
+            </div>
+            <div class="flex flex-row justify-between">
+                <a class="pageNavigation" href="coordination.html">←Concurrent Coordination</a> 
+            </div>
+        </main>
+        <footer>Creative Scala is copyright Noel Welsh</footer>
+    </div>
+
+    </div>
+</body>
+
+</html>

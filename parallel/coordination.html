@@ -30,6 +30,7 @@
           <li class="level2 nav-leaf"><a href="../introduction/clock.html">Clock</a></li>
           <li class="level1 nav-node"><a href="index.html">Parallelism and Concurrency</a></li>
           <li class="level2 active nav-leaf"><a href="#">Concurrent Coordination</a></li>
+          <li class="level2 nav-leaf"><a href="job-manager.html">Job Manager</a></li>
         </ul>
       </details>
     </nav>
@@ -40,15 +41,17 @@
           <li class="level2 nav-leaf"><a href="../introduction/clock.html">Clock</a></li>
           <li class="level1 nav-node"><a href="index.html">Parallelism and Concurrency</a></li>
           <li class="level2 active nav-leaf"><a href="#">Concurrent Coordination</a></li>
+          <li class="level2 nav-leaf"><a href="job-manager.html">Job Manager</a></li>
         </ul>
     </nav>
 
     <div id="content">
         <main class="content">
             <h1 id="concurrent-coordination" class="title">Concurrent Coordination</h1>
-            <p>There aren&#39;t many concurrent programs that don&#39;t require some interaction between the different parts. The Cats Effects <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html">standard library</a> provides useful tools for communication between concurrent processes. There is also <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html">Ref</a> and <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Deferred.html">Deferred</a>, which are part of the <code>kernel</code>, and some the most basic tools on which many others are built.</p>
+            <p>We can get quite far with <code>parMapN</code> and friends, but complex concurrent programs require coordination between different parts that extends beyond returning values. The Cats Effects <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/std/index.html">standard library</a> provides useful tools for communication between concurrent processes. There is also <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Ref.html">Ref</a> and <a href="https://typelevel.org/cats-effect/api/3.x/cats/effect/kernel/Deferred.html">Deferred</a>, which are part of the <code>kernel</code> and the most basic tools on which many others are built.</p>
             
-            <h2 id="using-ref" class="section">Using Ref</h2>
+            <h2 id="creating-concurrent-tools" class="section">Creating Concurrent Tools</h2>
+            <p>We&#39;ll use <code>Ref</code> as an example of a concurrent tool. All the others work in the same way.</p>
             <p>The simplest way to create a <code>Ref</code> is to use <code>IO.ref</code>.</p>
             <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">ref</span><span>: </span><span class="type-name">IO</span><span>[</span><span class="type-name">Ref</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>]] = </span><span class="type-name">IO</span><span>.</span><span class="identifier">ref</span><span>(</span><span class="number-literal">1</span><span>)</span></code></pre>
             <p>The type looks a bit complicated. Unpacking it we have:</p>
@@ -57,15 +60,50 @@
               <li><code>Stuff</code> is <code>Ref[IO, Int]</code>, meaning a <code>Ref</code> that stores an <code>Int</code> and works with <code>IO</code>. </li>
             </ul>
             <p>You&#39;ll have to get used to these kind of types when using Cats Effect.</p>
-            <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-ref.scala"><code>code/src/main/scala/parallelism/02-ref.scala</code></a>.</p>
-            
-            <h2 id="deferred" class="section">Deferred</h2>
-            <p><code>Ref</code> is good for accumulating results, but for coordination <code>Deferred</code> is a better choice. The <a href="https://typelevel.org/cats-effect/docs/std/deferred">Deferred documentation</a> gives a good overview of use.</p>
-            <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/03-deferred.scala"><code>code/src/main/scala/parallelism/03-deferred.scala</code></a>.</p>
-            <div class="doodle" id="job-manager"></div>
-            <script>JobManager.go("job-manager")</script>
+            <p>We can also construct a <code>Ref</code> by calling the <code>apply</code> method on the companion object. In this case we have to specify the effect type (which is always <code>IO</code>, for us) to help out type inference.</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">ref2</span><span> = </span><span class="type-name">Ref</span><span>[</span><span class="type-name">IO</span><span>].</span><span class="identifier">of</span><span>(</span><span class="number-literal">1</span><span>)</span></code></pre>
+            <p>We could also write out the full type, as below, but this quickly gets tedious.</p>
+            <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">ref3</span><span>: </span><span class="type-name">IO</span><span>[</span><span class="type-name">Ref</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>]] = </span><span class="type-name">Ref</span><span>.</span><span class="identifier">of</span><span>(</span><span class="number-literal">1</span><span>)</span></code></pre>
+            <div class="exercise">
+              
+              <h4 id="exercise-putting-tools-to-use">Exercise: Putting Tools to Use</h4>
+              <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/03-tools.scala"><code>code/src/main/scala/parallelism/02-tools.scala</code></a>, which gets you to use some of the tools provided by Cats Effect.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <ol class="arabic">
+                  <li>
+                    <p>This exercise is focusing on the difference between description and action. The code in <code>first</code> uses a description twice, so it gets two <em>different</em> <code>Refs</code>. The code in <code>second</code> uses the same <code>Ref</code> twice, which is usually what you want.</p>
+                  </li>
+                  <li>
+                    <p>The following code will do the job.</p>
+                  </li>
+                </ol>
+                <pre><code class="nohighlight"><span class="keyword">def</span><span> </span><span class="declaration-name">generate</span><span>(</span><span class="identifier">ref</span><span>: </span><span class="type-name">Ref</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>]) = </span><span class="identifier">smallRandomSleep</span><span>
+  .</span><span class="identifier">map</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">random</span><span>.</span><span class="identifier">nextInt</span><span>(</span><span class="number-literal">10</span><span>))
+  .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">v</span><span> =&gt; </span><span class="identifier">ref</span><span>.</span><span class="identifier">getAndUpdate</span><span>(</span><span class="identifier">a</span><span> =&gt; </span><span class="identifier">a</span><span> + </span><span class="identifier">v</span><span>))
+  .</span><span class="identifier">replicateA_</span><span>(</span><span class="number-literal">100</span><span>)
+
+</span><span class="keyword">def</span><span> </span><span class="declaration-name">collector</span><span>(</span><span class="identifier">ref</span><span>: </span><span class="type-name">Ref</span><span>[</span><span class="type-name">IO</span><span>, </span><span class="type-name">Int</span><span>]) =
+  </span><span class="type-name">IO</span><span>.</span><span class="identifier">sleep</span><span>(</span><span class="number-literal">1</span><span>.</span><span class="identifier">second</span><span>)
+    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">_</span><span> =&gt; </span><span class="identifier">ref</span><span>.</span><span class="identifier">get</span><span>)
+    .</span><span class="identifier">flatMap</span><span>(</span><span class="identifier">v</span><span> =&gt; </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">s&quot;Value is </span><span class="substitution">$v</span><span class="string-literal">&quot;</span><span>))
+
+</span><span class="keyword">val</span><span> </span><span class="identifier">run</span><span> =
+  </span><span class="identifier">ref</span><span>.</span><span class="identifier">flatMap</span><span> { </span><span class="identifier">r</span><span> =&gt;
+    (
+      </span><span class="identifier">generate</span><span>(</span><span class="identifier">r</span><span>),
+      </span><span class="identifier">generate</span><span>(</span><span class="identifier">r</span><span>),
+      </span><span class="identifier">generate</span><span>(</span><span class="identifier">r</span><span>),
+      </span><span class="identifier">generate</span><span>(</span><span class="identifier">r</span><span>),
+      </span><span class="identifier">generate</span><span>(</span><span class="identifier">r</span><span>),
+      </span><span class="identifier">collector</span><span>(</span><span class="identifier">r</span><span>)
+    ).</span><span class="identifier">parTupled</span><span>.</span><span class="identifier">void</span><span>
+  }</span></code></pre>
+              </div>
+            </div>
             <div class="flex flex-row justify-between">
-                <a class="pageNavigation" href="index.html">←Parallelism and Concurrency</a> 
+                <a class="pageNavigation" href="index.html">←Parallelism and Concurrency</a> <a class="pageNavigation" href="job-manager.html">Job Manager→</a>
             </div>
         </main>
         <footer>Creative Scala is copyright Noel Welsh</footer>
