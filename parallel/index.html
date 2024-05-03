@@ -65,6 +65,8 @@
                 </ul>
               </div>
             </div>
+            
+            <h2 id="parallelism-in-cats-effect" class="section">Parallelism in Cats Effect</h2>
             <p>If we have two <code>IO</code> values that don&#39;t depend on each other, we should be able to run them in parallel.
             For example, the following two values could be run in parallel.</p>
             <pre><code class="nohighlight"><span class="keyword">val</span><span> </span><span class="identifier">a</span><span> = </span><span class="type-name">IO</span><span>.</span><span class="identifier">println</span><span>(</span><span class="string-literal">&quot;A&quot;</span><span>)
@@ -84,7 +86,7 @@
             <div class="solution">
               <div class="solution-body">
                 <p>It&#39;s both. It depends on the effects you run with <code>parMapN</code>, so it&#39;s not really a property of <code>parMapN</code> but of both <code>parMapN</code> and the effects that are being run.</p>
-                <p>If the effects being run only compute values, so we have no way of observing that are doing stuff, then we have just parallelism. However, if we can observe them being run, as we can when we use <code>IO.println</code>, then we have concurrency.</p>
+                <p>If the effects being run only compute values, so we have no way of observing they are doing stuff, then we have just parallelism. However, if we can observe them being run, as we can when we use <code>IO.println</code>, then we have concurrency.</p>
               </div>
             </div>
             <p>How does <code>parMap</code> work? It&#39;s either <em>dark magic</em> or an instance of the <a href="https://typelevel.org/cats/typeclasses/parallel.html">Parallel</a> type class. Despite it&#39;s name, <code>Parallel</code> is not about running code in parallel. It&#39;s just about having a different implementation of <code>mapN</code> and friends with different semantics. For <code>IO</code> these different semantics are, coincidently, about parallelism, but you can call <code>parMapN</code> on <code>Either</code> and get something else.</p>
@@ -113,14 +115,44 @@
                 <p>We get <em>both</em> failures.</p>
               </div>
             </div>
-            <p>There are a bunch of <code>par</code> methods. Here are the most useful ones, with simplified type signatures.</p>
-            <ul>
-              <li><code>(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]</code></li>
-              <li><code>(F[A], ..., F[Z]).parMapN((A, ..., Z) =&gt; AA): AA</code></li>
-              <li><code>G[F[A]].parSequence: F[G[A]]</code></li>
-              <li><code>G[A].parTraverse(A =&gt; F[B]): F[G[B]]</code></li>
-            </ul>
-            <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/01-parallelism.scala"><code>code/src/main/scala/parallelism/01-parallelism.scala</code></a> to increase your familiarity with <code>parMapN</code> and friends, and then complete <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-job-manager.scala"><code>code/src/main/scala/parallelism/02-job-manager.scala</code></a> to use the tools in a somewhat realistic context.</p>
+            <div class="exercise">
+              
+              <h4 id="exercise-parallel-helpers">Exercise: Parallel Helpers</h4>
+              <p>There are a bunch of <code>par</code> methods. Here are the most useful ones, with simplified type signatures.</p>
+              <ul>
+                <li><code>(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]</code></li>
+                <li><code>(F[A], ..., F[Z]).parMapN((A, ..., Z) =&gt; AA): AA</code></li>
+                <li><code>G[F[A]].parSequence: F[G[A]]</code></li>
+                <li><code>G[A].parTraverse(A =&gt; F[B]): F[G[B]]</code></li>
+              </ul>
+              <p>Complete the challenge in <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/01-parallelism.scala"><code>code/src/main/scala/parallelism/01-parallelism.scala</code></a> to increase your familiarity with <code>parMapN</code> and friends.</p>
+            </div>
+            <div class="solution">
+              <div class="solution-body">
+                <ol class="arabic">
+                  <li>
+                    <p>This is simply <code>IO(Blackhold.consumeCPU(999999999L))</code></p>
+                  </li>
+                  <li>
+                    <p><code>consume.timed</code> will run the blackhole and return the time it took. You probably want to out the time.</p>
+                  </li>
+                  <li>
+                    <p>This is <code>mapN</code> versus <code>parMapN</code>.</p>
+                  </li>
+                  <li>
+                    <p>This is <code>sequence</code> versus <code>parSequence</code>.</p>
+                  </li>
+                  <li>
+                    <p>You can use <code>traverse</code> and <code>parTraverse</code> to achieve this.</p>
+                  </li>
+                </ol>
+              </div>
+            </div>
+            <div class="exercise">
+              
+              <h4 id="exercise-job-manager">Exercise: Job Manager</h4>
+              <p>Complete <a href="https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-job-manager.scala"><code>code/src/main/scala/parallelism/02-job-manager.scala</code></a> to use the tools in a somewhat realistic context.</p>
+            </div>
             <div class="flex flex-row justify-between">
                 <a class="pageNavigation" href="../introduction/clock.html">←Clock</a> <a class="pageNavigation" href="coordination.html">Concurrent Coordination→</a>
             </div>
