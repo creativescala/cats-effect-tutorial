@@ -19,6 +19,9 @@ Let's be clear on the difference between **parallelism** and **concurrency**:
 - Concurrency means we can observe multiple things happening in overlapping time periods, even though they might not actually be running at the same time (i.e. they might not be parallel.) An example is Javascript. It has a single-threaded runtime but we can still observe race conditions between different callback functions.
 @:@
 
+
+## Parallelism in Cats Effect
+
 If we have two `IO` values that don't depend on each other, we should be able to run them in parallel.
 For example, the following two values could be run in parallel.
 
@@ -49,7 +52,7 @@ Does `parMapN` display parallelism, concurrency, neither, or both?
 @:solution
 It's both. It depends on the effects you run with `parMapN`, so it's not really a property of `parMapN` but of both `parMapN` and the effects that are being run.
 
-If the effects being run only compute values, so we have no way of observing that are doing stuff, then we have just parallelism. However, if we can observe them being run, as we can when we use `IO.println`, then we have concurrency.
+If the effects being run only compute values, so we have no way of observing they are doing stuff, then we have just parallelism. However, if we can observe them being run, as we can when we use `IO.println`, then we have concurrency.
 @:@
 
 
@@ -89,6 +92,8 @@ We get *both* failures.
 @:@
 
 
+
+@:exercise(Parallel Helpers)
 There are a bunch of `par` methods. Here are the most useful ones, with simplified type signatures.
 
 * `(F[A], ..., F[Z]).parTupled: F[(A, ..., Z)]`
@@ -96,7 +101,24 @@ There are a bunch of `par` methods. Here are the most useful ones, with simplifi
 * `G[F[A]].parSequence: F[G[A]]`
 * `G[A].parTraverse(A => F[B]): F[G[B]]`
 
-Complete the challenge in [`code/src/main/scala/parallelism/01-parallelism.scala`][parallelism] to increase your familiarity with `parMapN` and friends, and then complete [`code/src/main/scala/parallelism/02-job-manager.scala`][job-manager] to use the tools in a somewhat realistic context.
+Complete the challenge in [`code/src/main/scala/parallelism/01-parallelism.scala`][parallelism] to increase your familiarity with `parMapN` and friends.
+@:@
+
+@:solution
+1. This is simply `IO(Blackhold.consumeCPU(999999999L))`
+
+2. `consume.timed` will run the blackhole and return the time it took. You probably want to out the time.
+
+3. This is `mapN` versus `parMapN`.
+
+4. This is `sequence` versus `parSequence`.
+
+5. You can use `traverse` and `parTraverse` to achieve this.
+@:@
+
+@:exercise(Job Manager)
+Complete [`code/src/main/scala/parallelism/02-job-manager.scala`][job-manager] to use the tools in a somewhat realistic context.
+@:@
 
 [parallelism]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/01-parallelism.scala
 [job-manager]: https://github.com/creativescala/cats-effect-tutorial/blob/main/code/src/main/scala/parallelism/02-job-manager.scala
