@@ -17,7 +17,6 @@
 package parallelism
 
 import cats.effect.*
-import cats.effect.std.Semaphore
 import cats.syntax.all.*
 import doodle.core.*
 import doodle.core.font.Font
@@ -30,55 +29,11 @@ import scala.concurrent.duration.*
 // coordinate between multiple concurrent processes.
 object JobManagerVisualize extends IOApp.Simple {
 
-  // Evaluate a Stage, creating an IO that runs the Stage correctly.
-  def evalStage(
-      stage: Stage,
-      results: List[Result],
-      canvas: Canvas
-  ): IO[(Int, Result)] =
-    stage match {
-      case Stage.Sequential(work) =>
-        draw(results :+ Result.StageInProgress(0, 1), canvas)
-          .flatMap(_ => work)
-          .map(i => (i, Result.StageComplete(1)))
-      case Stage.Parallel(repeats, work) =>
-        Semaphore[IO](0).flatMap { s =>
-          def monitor(count: Int): IO[Unit] =
-            if count == repeats then
-              draw(results :+ Result.StageInProgress(count, repeats), canvas)
-            else
-              s.acquire *>
-                draw(
-                  results :+ Result.StageInProgress(count, repeats),
-                  canvas
-                ) *> monitor(count + 1)
-
-          val parallelWork =
-            List
-              .fill(repeats)(work.flatMap(r => s.release *> IO.pure(r)))
-              .parSequence
-
-          draw(results :+ Result.StageInProgress(0, repeats), canvas) *>
-            (parallelWork, monitor(0)).parMapN((results, _) =>
-              (results.sum, Result.StageComplete(repeats))
-            )
-        }
-    }
-
   // Evaluate the Job, creating an IO that runs all the stages in the correct
   // order and returns the sum of the values computed by each stage.
-  def eval(job: Job, canvas: Canvas): IO[Int] =
-    job.stages
-      .foldLeftM[IO, (Int, List[Result])]((0, List.empty[Result]))(
-        (accum, elt) =>
-          val (total, results) = accum
-          evalStage(elt, results, canvas)
-            .map { case (i, r) => (total + i, results :+ r) }
-            .flatTap { case (_, results) => draw(results, canvas) }
-      )
-      .flatMap { case (sum, results) =>
-        draw(results :+ Result.Complete(sum), canvas).as(sum)
-      }
+  // Additionally, it should use `draw` below to visualize running the job on
+  // the given `Canvas`.
+  def eval(job: Job, canvas: Canvas): IO[Int] = ???
 
   //----------------------------------------------------------------------------
   // Job generation
@@ -121,11 +76,24 @@ object JobManagerVisualize extends IOApp.Simple {
   // Job visualization
   //----------------------------------------------------------------------------
 
+  // Describes the progress of a portion of a job.
+  //
+  // - StageComplete indicates a stage that has completed, with the given number
+  // of parallel workers (which is 1 for a sequential job).
+  //
+  // - StageInProgress indicates a stage that is currently running.
+  //
+  // - Complete indicates the entire job has finished and gives the result of
+  // the job.
   enum Result {
     case StageComplete(workers: Int)
     case StageInProgress(complete: Int, total: Int)
     case Complete(result: Int)
   }
+
+  // Draws a `List[Result]` to the given `Canvas`
+  def draw(results: List[Result], canvas: Canvas): IO[Unit] =
+    visualize(results).drawWithCanvasToIO(canvas)
 
   val boxSize = 60
   val spacerSize = 3
@@ -180,9 +148,6 @@ object JobManagerVisualize extends IOApp.Simple {
       }
       .allBeside
       .noStroke
-
-  def draw(results: List[Result], canvas: Canvas): IO[Unit] =
-    visualize(results).drawWithCanvasToIO(canvas)
 
   //----------------------------------------------------------------------------
   // Go go go!
