@@ -2,7 +2,7 @@
 
 Our final challenge for this section returns to the Job Manager. In this case we're going to the concurrent tools we've just learned about to visualize the progress of running a job. Below you'll see an example of the output you should end up with.
 
-@:doodle("job-manager", "JobManager.go")
+@:doodle("job-manager-canvas", "JobManager.go")
 
 @:exercise(Job Manager)
 Complete [`code/src/main/scala/parallelism/04-job-manager-visualize.scala`][job-manager].
