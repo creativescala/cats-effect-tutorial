@@ -60,6 +60,7 @@ How does `parMap` work? It's either *dark magic* or an instance of the [Parallel
 
 @:exercise(Parallel Either)
 What does `parMapN` do on `Either`? Create some code examples illustrating the difference between the usual `mapN`.
+I suggest you use `List[String]` as the error type in the `Either`, and try calling `mapN` and `parMapN` when you have failed `Eithers` (i.e. two `Lefts`.)
 
 Note: you will need to `import cats.syntax.all.*` to make `mapN` etc. available.
 
